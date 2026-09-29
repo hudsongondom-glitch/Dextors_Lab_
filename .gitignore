@@ -1,0 +1,24 @@
+# evidence may contain tenant identifiers - local only
+runs/
+
+# generated PBIP projects - the generator recipe is the source of truth
+artifacts/
+
+# never commit binaries pulled from a tenant
+*.pbix
+*.zip
+*.bin
+
+# never commit secrets
+.env
+*.token
+*.secret
+config/*.local.json
+config/lab.secrets.local.json
+config/.tokencache.local.json
+config/*.local.pfx
+config/*.local.cer
+
+# local lab state - seeded from templates/ by lab/init, never shipped
+config/lab.config.json
+config/lab.policy.json

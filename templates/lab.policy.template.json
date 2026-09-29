@@ -1,0 +1,24 @@
+{
+  "_comment": "Enforced safety boundary, seeded by 'lab/init' into <LAB_HOME>/config/lab.policy.json. Loaded on every run and checked in code, not merely documented. An empty allowedTenantIds means the lab refuses to authenticate anywhere - that is the intended default, and lab/init fills in the one tenant you nominate.",
+
+  "allowedTenantIds": [],
+  "allowedTargets": ["*"],
+
+  "allowedApiHosts": [
+    "login.microsoftonline.com",
+    "graph.microsoft.com",
+    "outlook.office365.com",
+    "api.powerbi.com",
+    "api.fabric.microsoft.com",
+    "*.sharepoint.com",
+    "*.dynamics.com"
+  ],
+
+  "_denyComment": "Any target value matching these is refused outright. This is what stops the lab being pointed at production or a customer environment by a slip of configuration. Widen it if your test resources are unluckily named; never narrow it below these.",
+  "denyNamePatterns": ["*prod*", "*production*", "*customer*", "*client-*", "*live*"],
+
+  "allowDestructive": false,
+  "requireTrackedResourceForDelete": true,
+  "dryRunDefault": false,
+  "maxResourcesPerRun": 25
+}

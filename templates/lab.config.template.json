@@ -1,0 +1,110 @@
+{
+  "_comment": "Seeded by 'lab/init' into <LAB_HOME>/config/lab.config.json. Identifiers only - NEVER secrets, tokens, passwords or client secrets. Those live in lab.secrets.local.json (git-ignored) or environment variables.",
+
+  "labName": "__LAB_NAME__",
+  "resourcePrefix": "__RESOURCE_PREFIX__",
+
+  "tenant": {
+    "id": "__TENANT_ID__",
+    "domain": "__TENANT_DOMAIN__",
+    "displayName": "Test tenant"
+  },
+
+  "_identitiesComment": "One entry per app registration plus how to authenticate as it. Run 'lab/setup-app-registration' to create the app and fill these in automatically.",
+  "identities": {
+    "msg-app": {
+      "clientId": "",
+      "displayName": "Lab Graph app",
+      "authMode": "clientsecret",
+      "secretEnvVar": "LAB_SECRET_MSGAPP",
+      "_notes": "Graph app-only. Needs application permissions consented by a tenant admin."
+    },
+    "msg-app-cert": {
+      "clientId": "",
+      "displayName": "Lab Graph app (certificate)",
+      "authMode": "certificate",
+      "certPath": "config/lab-cert-msg-app.local.pfx",
+      "certPasswordEnvVar": "LAB_CERT_PASSWORD",
+      "_notes": "Same app as msg-app, certificate credential. REQUIRED for SharePoint REST app-only - client secrets give 'Unsupported app only token'. Create with lab/setup-app-certificate, then upload the .cer to the app registration."
+    },
+    "dverse-app": {
+      "clientId": "",
+      "displayName": "Lab Dataverse app",
+      "authMode": "devicecode",
+      "secretEnvVar": "LAB_SECRET_DVERSE",
+      "_notes": "DELEGATED user auth for Dataverse. Needs Dataverse user_impersonation and 'Allow public client flows' = Yes."
+    },
+    "kslab-pbi": {
+      "clientId": "",
+      "displayName": "Lab Power BI app",
+      "authMode": "devicecode",
+      "secretEnvVar": "LAB_SECRET_PBI",
+      "_notes": "DELEGATED user auth for Power BI/Fabric. Avoids service-principal export restrictions. Needs 'Allow public client flows' = Yes."
+    },
+    "dverse-app-appauth": {
+      "clientId": "",
+      "displayName": "Lab Dataverse app (app-only)",
+      "authMode": "clientsecret",
+      "secretEnvVar": "LAB_SECRET_DVERSE",
+      "reserved": true,
+      "_notes": "RESERVED, dormant. Requires an Application User record in the environment plus a security role, or Dataverse returns 403 0x80072560. Use only via -Identity dverse-app-appauth."
+    },
+    "kslab-pbi-appauth": {
+      "clientId": "",
+      "displayName": "Lab Power BI app (app-only)",
+      "authMode": "clientsecret",
+      "secretEnvVar": "LAB_SECRET_PBI",
+      "reserved": true,
+      "_notes": "RESERVED, dormant. Requires the tenant setting 'Service principals can use Fabric APIs' plus the SP added to the workspace as Admin. Use only via -Identity kslab-pbi-appauth."
+    }
+  },
+
+  "_targetsComment": "One entry per test environment. Empty values produce a clean BLOCKED listing exactly what is missing - fill them in as you start using each product.",
+  "targets": {
+    "spo-main": {
+      "product": "sharepoint",
+      "identity": "msg-app",
+      "siteUrl": ""
+    },
+    "exchange-main": {
+      "product": "exchange",
+      "identity": "msg-app",
+      "mailbox": ""
+    },
+    "dataverse-main": {
+      "product": "powerplatform",
+      "identity": "dverse-app",
+      "environmentUrl": ""
+    },
+    "dataverse-globaldisco": {
+      "product": "powerplatform",
+      "identity": "dverse-app",
+      "environmentUrl": "https://globaldisco.crm.dynamics.com",
+      "_notes": "Global Discovery Service, not a real environment. Used by powerplatform/inspect-teams-environment to resolve an environment's Web API URL."
+    },
+    "powerbi-main": {
+      "product": "powerbi",
+      "identity": "kslab-pbi",
+      "workspaceId": "",
+      "workspaceName": ""
+    },
+    "powerbi-fabric": {
+      "product": "powerbi",
+      "identity": "kslab-pbi",
+      "workspaceId": "",
+      "workspaceName": "",
+      "_notes": "A workspace on Fabric capacity. Needed for Dataflow Gen2 and other Fabric-only items."
+    },
+    "powerbi-largesem": {
+      "product": "powerbi",
+      "identity": "kslab-pbi",
+      "workspaceId": "",
+      "workspaceName": "",
+      "_notes": "A workspace whose semantic models use large semantic model storage format (PremiumFiles)."
+    }
+  },
+
+  "defaults": {
+    "target": "spo-main"
+  }
+}

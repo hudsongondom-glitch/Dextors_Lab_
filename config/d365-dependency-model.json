@@ -1,0 +1,151 @@
+{
+  "_comment": "Schema definition for the D365 restore dependency experiments. Scenario arms are described in recipes/powerplatform/seed-cycle-dataset.ps1. Non-secret: table and column names only.",
+  "_roles": "Three roles - account, contact, order - matching the scenario diagram. 'manage': true means the lab may create the table; set it to false and point logicalName at an existing table to reuse artifacts you already built, and the lab will verify instead of create.",
+  "_edges": "link 'obligatory' = required lookup (black in the diagram), 'optional' = nullable lookup (blue). closesCycle marks the back-edge that is written in a second pass, and that the acyclic control arm omits.",
+
+  "defaultProfile": "custom",
+
+  "profiles": {
+    "custom": {
+      "description": "Purpose-built lab tables with explicitly controlled required levels. Reproduces the scenario diagram exactly: Order -> Contact -> Account are obligatory, Order -> Account is optional, Account -> Contact closes the cycle.",
+      "solution": {
+        "publisherUniqueName": "dextorslab",
+        "publisherFriendlyName": "Dextors Lab",
+        "prefix": "dxl",
+        "optionValuePrefix": 42100,
+        "uniqueName": "dextorslabdeps",
+        "friendlyName": "Dextors Lab - Dependency Scenarios",
+        "version": "1.0.0.0"
+      },
+      "roles": {
+        "account": {
+          "logicalName": "dxl_labaccount",
+          "schemaName": "dxl_LabAccount",
+          "displayName": "Lab Account",
+          "pluralName": "Lab Accounts",
+          "nameAttribute": "dxl_name",
+          "manage": true
+        },
+        "contact": {
+          "logicalName": "dxl_labcontact",
+          "schemaName": "dxl_LabContact",
+          "displayName": "Lab Contact",
+          "pluralName": "Lab Contacts",
+          "nameAttribute": "dxl_name",
+          "manage": true
+        },
+        "order": {
+          "logicalName": "dxl_laborder",
+          "schemaName": "dxl_LabOrder",
+          "displayName": "Lab Order",
+          "pluralName": "Lab Orders",
+          "nameAttribute": "dxl_name",
+          "manage": true
+        }
+      },
+      "edges": [
+        {
+          "name": "contact-to-account",
+          "from": "contact",
+          "to": "account",
+          "relationshipSchemaName": "dxl_labaccount_labcontact_account",
+          "lookupSchemaName": "dxl_AccountId",
+          "lookupAttribute": "dxl_accountid",
+          "displayName": "Account",
+          "link": "obligatory",
+          "deleteBehavior": "Restrict",
+          "closesCycle": false
+        },
+        {
+          "name": "order-to-contact",
+          "from": "order",
+          "to": "contact",
+          "relationshipSchemaName": "dxl_labcontact_laborder_contact",
+          "lookupSchemaName": "dxl_ContactId",
+          "lookupAttribute": "dxl_contactid",
+          "displayName": "Contact",
+          "link": "obligatory",
+          "deleteBehavior": "Restrict",
+          "closesCycle": false
+        },
+        {
+          "name": "order-to-account",
+          "from": "order",
+          "to": "account",
+          "relationshipSchemaName": "dxl_labaccount_laborder_account",
+          "lookupSchemaName": "dxl_AccountId",
+          "lookupAttribute": "dxl_accountid",
+          "displayName": "Account",
+          "link": "optional",
+          "deleteBehavior": "RemoveLink",
+          "closesCycle": false
+        },
+        {
+          "name": "account-to-primarycontact",
+          "from": "account",
+          "to": "contact",
+          "relationshipSchemaName": "dxl_labcontact_labaccount_primary",
+          "lookupSchemaName": "dxl_PrimaryContactId",
+          "lookupAttribute": "dxl_primarycontactid",
+          "displayName": "Primary Contact",
+          "link": "optional",
+          "deleteBehavior": "RemoveLink",
+          "closesCycle": true
+        }
+      ]
+    },
+
+    "oob": {
+      "description": "Out-of-box account / contact / customeraddress, matching the entities in the reported case. Every edge here is OPTIONAL in stock Dataverse - which is itself a finding: the reported case had no obligatory edge, so the failure was ordering plus retry budget, not requiredness. Nothing is created; the tables must already exist.",
+      "roles": {
+        "account": {
+          "logicalName": "account",
+          "nameAttribute": "name",
+          "manage": false
+        },
+        "contact": {
+          "logicalName": "contact",
+          "_nameAttributeNote": "fullname is computed and not writable; lastname is what the lab stamps.",
+          "nameAttribute": "lastname",
+          "manage": false
+        },
+        "order": {
+          "logicalName": "customeraddress",
+          "nameAttribute": "name",
+          "manage": false
+        }
+      },
+      "edges": [
+        {
+          "name": "contact-to-account",
+          "from": "contact",
+          "to": "account",
+          "lookupAttribute": "parentcustomerid",
+          "displayName": "Company Name",
+          "link": "optional",
+          "closesCycle": false,
+          "_note": "Polymorphic customer lookup. The account-targeted navigation property is parentcustomerid_account, resolved from relationship metadata at run time."
+        },
+        {
+          "name": "order-to-account",
+          "from": "order",
+          "to": "account",
+          "lookupAttribute": "parentid",
+          "displayName": "Parent",
+          "link": "optional",
+          "closesCycle": false,
+          "_note": "customeraddress.parentid is polymorphic across account/contact and several other tables."
+        },
+        {
+          "name": "account-to-primarycontact",
+          "from": "account",
+          "to": "contact",
+          "lookupAttribute": "primarycontactid",
+          "displayName": "Primary Contact",
+          "link": "optional",
+          "closesCycle": true
+        }
+      ]
+    }
+  }
+}
