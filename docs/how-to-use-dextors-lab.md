@@ -367,7 +367,7 @@ Cleanup verdicts:
 The repository is also a Claude Code plugin, so you can drive the lab in plain English:
 
 ```
-/plugin marketplace add hudsongondom-glitch/Dextors-Lab
+/plugin marketplace add hudsongondom-glitch/dextors_lab_
 /plugin install dextors-lab
 ```
 

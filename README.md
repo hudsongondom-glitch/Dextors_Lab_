@@ -22,7 +22,7 @@ Optionally, install it as a Claude Code plugin to run the same recipes from plai
 requests. The plugin calls the same `lab.ps1` dispatcher and adds no functionality of its own:
 
 ```
-/plugin marketplace add hudsongondom-glitch/Dextors-Lab
+/plugin marketplace add hudsongondom-glitch/dextors_lab_
 /plugin install dextors-lab
 ```
 
