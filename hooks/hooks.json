@@ -1,0 +1,14 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "pwsh -NoProfile -File \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/guard-policy.ps1\"",
+          "timeout": 15
+        }
+      ]
+    }
+  ]
+}

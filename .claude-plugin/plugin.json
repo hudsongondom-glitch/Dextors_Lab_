@@ -1,0 +1,19 @@
+{
+  "name": "dextors-lab",
+  "version": "0.1.0",
+  "description": "Build controlled test artifacts in your own Microsoft 365, Power Platform and Power BI test tenant, run experiments against them, and collect evidence - with the tenant boundary enforced in code.",
+  "author": {
+    "name": "hudsongondom-glitch"
+  },
+  "repository": "https://github.com/hudsongondom-glitch/Dextors-Lab",
+  "license": "MIT",
+  "keywords": [
+    "microsoft-365",
+    "power-platform",
+    "power-bi",
+    "dataverse",
+    "sharepoint",
+    "test-data",
+    "backup-restore"
+  ]
+}

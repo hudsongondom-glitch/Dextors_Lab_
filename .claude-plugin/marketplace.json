@@ -1,0 +1,14 @@
+{
+  "name": "dextors-lab",
+  "owner": {
+    "name": "hudsongondom-glitch",
+    "url": "https://github.com/hudsongondom-glitch"
+  },
+  "plugins": [
+    {
+      "name": "dextors-lab",
+      "source": "./",
+      "description": "Build controlled test artifacts in your own Microsoft 365, Power Platform and Power BI test tenant, run experiments against them, and collect evidence - with the tenant boundary enforced in code."
+    }
+  ]
+}
